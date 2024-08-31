@@ -34,7 +34,10 @@ enum Commands {
     },
 
     /// Store the current working directory to the object database
-    WriteTree {},
+    WriteTree {
+        #[arg(short)]
+        print: bool,
+    },
 }
 
 fn main() {
@@ -45,9 +48,9 @@ fn main() {
     match &cli.command {
         Some(Commands::Init {}) => init::main(),
         Some(Commands::Reset {}) => reset::main(),
-        Some(Commands::HashObject { path, write }) => hash_object::main(path, write),
+        Some(Commands::HashObject { path, write }) => hash_object::main(path, write, &true),
         Some(Commands::CatFile { hash }) => cat_file::main(hash),
-        Some(Commands::WriteTree {}) => write_tree::main(),
+        Some(Commands::WriteTree { print }) => write_tree::main(print),
         None => println!("Welcome to gyat. Use -h to see usage."),
     }
 }

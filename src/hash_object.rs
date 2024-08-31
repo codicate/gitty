@@ -3,14 +3,18 @@ use std::fs::File;
 use std::io::{Read, Result, Write};
 use std::path::PathBuf;
 
-pub fn main(path: &String, write: &bool) {
+pub fn main(path: &str, write: &bool, print: &bool) {
     match hash_object(path, write) {
-        Ok(hash) => println!("{}", hash),
+        Ok(hash) => {
+            if *print {
+                println!("{}", hash)
+            }
+        }
         Err(e) => eprintln!("Error: {}", e),
     }
 }
 
-fn hash_object(path: &String, write: &bool) -> Result<String> {
+fn hash_object(path: &str, write: &bool) -> Result<String> {
     let mut file = File::open(path)?;
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
