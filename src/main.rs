@@ -4,6 +4,7 @@ mod cat_file;
 mod hash_object;
 mod init;
 mod reset;
+mod write_tree;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -31,6 +32,9 @@ enum Commands {
     CatFile {
         hash: String,
     },
+
+    /// Store the current working directory to the object database
+    WriteTree {},
 }
 
 fn main() {
@@ -43,6 +47,7 @@ fn main() {
         Some(Commands::Reset {}) => reset::main(),
         Some(Commands::HashObject { path, write }) => hash_object::main(path, write),
         Some(Commands::CatFile { hash }) => cat_file::main(hash),
+        Some(Commands::WriteTree {}) => write_tree::main(),
         None => println!("Welcome to gyat. Use -h to see usage."),
     }
 }
