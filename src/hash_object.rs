@@ -1,6 +1,7 @@
 use sha1::{Digest, Sha1};
 use std::fs::File;
 use std::io::{Read, Result, Write};
+use std::path::PathBuf;
 
 pub fn main(path: &String, write: &bool) {
     match hash_object(path, write) {
@@ -29,8 +30,9 @@ fn hash_object(path: &String, write: &bool) -> Result<String> {
 }
 
 fn write_to_file(hash: &String, contents: &String) -> Result<()> {
-    let path = ".gyat/objects";
-    let mut file = File::create(format!("{0}/{1}", path, hash))?;
+    let mut path = PathBuf::from(".gyat/objects");
+    path.push(hash);
+    let mut file = File::create(path)?;
     file.write_all(contents.as_bytes())?;
     file.flush()?;
     Ok(())

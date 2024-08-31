@@ -29,6 +29,10 @@ enum Commands {
         #[arg(short)]
         write: bool,
     },
+
+    CatFile {
+        hash: String,
+    },
 }
 
 fn main() {
@@ -49,6 +53,7 @@ fn main() {
         Some(Commands::Init {}) => init::main(),
         Some(Commands::Reset {}) => reset::main(),
         Some(Commands::HashObject { path, write }) => hash_object::main(path, write),
+        Some(Commands::CatFile { hash }) => cat_file::main(hash),
         None => println!("Welcome to gyat. Use -h to see usage."),
     }
 }
