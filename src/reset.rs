@@ -1,4 +1,5 @@
 use std::fs;
+use std::io::Result;
 
 pub fn main() {
     match reset() {
@@ -7,7 +8,7 @@ pub fn main() {
     }
 }
 
-fn reset() -> Result<(), Box<dyn std::error::Error>> {
+fn reset() -> Result<()> {
     let dir_path = ".gyat";
 
     // Recursively delete the directory and its contents

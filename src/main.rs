@@ -1,5 +1,6 @@
 use clap::{Parser, Subcommand};
 
+mod cat_file;
 mod hash_object;
 mod init;
 mod reset;
