@@ -8,10 +8,6 @@ mod reset;
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Cli {
-    /// Turn debugging information on
-    #[arg(short, long, action = clap::ArgAction::Count)]
-    debug: u8,
-
     #[command(subcommand)]
     command: Option<Commands>,
 }
@@ -20,6 +16,7 @@ struct Cli {
 enum Commands {
     /// Create an empty Git repository or reinitialize an existing one
     Init {},
+    // DEBUG
     Reset {},
 
     /// Compute object ID and optionally create an object from a file
@@ -30,6 +27,7 @@ enum Commands {
         write: bool,
     },
 
+    /// Provide contents or details of repository objects
     CatFile {
         hash: String,
     },
@@ -37,15 +35,6 @@ enum Commands {
 
 fn main() {
     let cli = Cli::parse();
-
-    // You can see how many times a particular flag or argument occurred
-    // Note, only flags can have multiple occurrences
-    match cli.debug {
-        0 => println!("Debug mode is off"),
-        1 => println!("Debug mode is kind of on"),
-        2 => println!("Debug mode is on"),
-        _ => println!("Don't be crazy"),
-    }
 
     // You can check for the existence of subcommands, and if found use their
     // matches just as you would the top level cmd
