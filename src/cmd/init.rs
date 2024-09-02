@@ -1,15 +1,8 @@
-use std::io::{Error, ErrorKind, Result};
+use std::io::{Error, ErrorKind};
 use std::path::Path;
 use std::{env, fs};
 
-pub fn main() {
-    match init() {
-        Ok(_) => {}
-        Err(e) => eprintln!("Error: {}", e),
-    }
-}
-
-fn init() -> Result<()> {
+pub fn main() -> std::io::Result<()> {
     let path = Path::new(".gyat");
     if path.is_dir() {
         return Err(Error::new(

@@ -1,10 +1,5 @@
 use clap::{Parser, Subcommand};
-
-mod cat_file;
-mod hash_object;
-mod init;
-mod reset;
-mod write_tree;
+mod cmd;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -45,12 +40,17 @@ fn main() {
 
     // You can check for the existence of subcommands, and if found use their
     // matches just as you would the top level cmd
-    match &cli.command {
-        Some(Commands::Init {}) => init::main(),
-        Some(Commands::Reset {}) => reset::main(),
-        Some(Commands::HashObject { path, write }) => hash_object::main(path, write, &true),
-        Some(Commands::CatFile { hash }) => cat_file::main(hash),
-        Some(Commands::WriteTree { print }) => write_tree::main(print),
-        None => println!("Welcome to gyat. Use -h to see usage."),
+    let res = match &cli.command {
+        Some(Commands::Init {}) => cmd::init::main(),
+        Some(Commands::Reset {}) => cmd::reset::main(),
+        Some(Commands::HashObject { path, write }) => cmd::hash_object::main(path, write, &true),
+        Some(Commands::CatFile { hash }) => cmd::cat_file::main(hash),
+        Some(Commands::WriteTree { print }) => cmd::write_tree::main(print),
+        None => Ok(println!("Welcome to gyat. Use -h to see usage.")),
+    };
+
+    match res {
+        Ok(_) => {}
+        Err(e) => eprintln!("Unexpected Error: {}", e),
     }
 }
