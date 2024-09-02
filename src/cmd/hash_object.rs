@@ -31,8 +31,7 @@ pub fn hash_object(contents: &String, write: &bool) -> Result<String> {
     let hash: String = result.iter().map(|byte| format!("{:02x}", byte)).collect();
 
     if *write {
-        let mut path = PathBuf::from(".gyat/objects");
-        path.push(hash.clone());
+        let path = PathBuf::from(".gyat/objects").join(hash.clone());
         let mut file = File::create(path).expect("Please run gyat init first");
         file.write_all(contents.as_bytes())?;
         file.flush()?;
