@@ -2,22 +2,21 @@ use crate::cmd::hash_object;
 use std::collections::HashSet;
 use std::fs;
 use std::io::Result;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 pub fn main(print: &bool) -> Result<()> {
     let ignored_files = gyat::get_ignored_file_list();
-    let cwd = PathBuf::from(".");
-    let hash = navigate_folders_recursively(&cwd, &ignored_files, print)?;
+    let hash = navigate_folders_recursively(".", &ignored_files, print)?;
     println!("{}", hash);
     Ok(())
 }
 
-fn navigate_folders_recursively(
-    dir: &Path,
+fn navigate_folders_recursively<P: AsRef<Path>>(
+    path: P,
     ignored_files: &HashSet<String>,
     print: &bool,
 ) -> Result<String> {
-    let children = fs::read_dir(dir)?;
+    let children = fs::read_dir(path)?;
     let mut tree_content = String::new();
 
     for child in children {
