@@ -21,7 +21,7 @@ fn navigate_folders_recursively<P: AsRef<Path>>(
 
     for child in children {
         let path = child?.path();
-        let path_string: String = path.to_str().unwrap()[2..].to_string(); // remove "./"
+        let path_string = gyat::strip_path(&path);
 
         if ignored_files.contains(&path_string) {
             continue;

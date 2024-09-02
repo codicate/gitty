@@ -1,10 +1,12 @@
 use crate::cmd::cat_file;
 use std::collections::HashSet;
 use std::fs;
-use std::io::{BufRead, BufReader, Error, ErrorKind, Result, Write};
+use std::io::{Error, ErrorKind, Result, Write};
 use std::path::{Path, PathBuf};
+
+use super::cat_file::cat_file;
 pub fn main(hash: &str) -> Result<()> {
-    let path = PathBuf::from(".gyat/objects").join(hash);
+    let path = gyat::concat_path(gyat::DIROBJPATH, hash);
     if !Path::new(&path).exists() {
         return Err(Error::new(ErrorKind::InvalidInput, "Invalid hash provided"));
     }
@@ -16,38 +18,39 @@ pub fn main(hash: &str) -> Result<()> {
     Ok(())
 }
 
-fn delete_cwd<P: AsRef<Path>>(path: P, ignored_files: &HashSet<String>) -> Result<()> {
-    for child in fs::read_dir(&path)? {
+fn delete_cwd(dir: &str, ignored_files: &HashSet<String>) -> Result<()> {
+    for child in fs::read_dir(&dir)? {
         let path = child?.path();
-        let path_string: String = path.to_str().unwrap()[2..].to_string(); // remove "./"
+        let path_string = gyat::strip_path(&path);
 
         if ignored_files.contains(&path_string) {
             continue;
         }
 
         if path.is_dir() {
-            delete_cwd(&path, ignored_files)?;
+            delete_cwd(&path_string, ignored_files)?;
         } else {
             fs::remove_file(path)?;
         }
     }
 
-    fs::remove_dir(path)?;
+    if dir != "." {
+        fs::remove_dir(dir)?;
+    }
     Ok(())
 }
 
-fn restore_cwd<P: AsRef<Path>>(path: P, hash: &str) -> Result<()> {
-    let objpath = PathBuf::from(".gyat/objects").join(hash);
-    let file = fs::File::open(objpath)?;
-    let reader = BufReader::new(file);
-    let lines: Vec<String> = reader.lines().collect::<Result<_>>().unwrap_or_default();
-    let lines = parse_tree_file(lines);
+fn restore_cwd(dir: &str, hash: &str) -> Result<()> {
+    let tree_content = cat_file(hash)?;
+    let lines = parse_tree_file(tree_content);
 
     for (filetype, hash, filename) in lines {
-        let path = PathBuf::from(path.as_ref()).join(filename);
+        let path = PathBuf::from(dir).join(filename);
+        let path_string = gyat::strip_path(&path);
+
         if filetype == "tree" {
-            fs::create_dir(path.clone())?;
-            restore_cwd(path, &hash)?;
+            fs::create_dir(path)?;
+            restore_cwd(&path_string, &hash)?;
         } else {
             let contents = cat_file::cat_file(&hash)?;
             let mut file = fs::File::create(path)?;
@@ -59,9 +62,9 @@ fn restore_cwd<P: AsRef<Path>>(path: P, hash: &str) -> Result<()> {
     Ok(())
 }
 
-fn parse_tree_file(input: Vec<String>) -> Vec<(String, String, String)> {
+fn parse_tree_file(input: String) -> Vec<(String, String, String)> {
     input
-        .into_iter()
+        .lines()
         .map(|s| {
             let mut parts = s.split_whitespace();
             (

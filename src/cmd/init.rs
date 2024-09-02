@@ -3,7 +3,7 @@ use std::path::Path;
 use std::{env, fs};
 
 pub fn main() -> std::io::Result<()> {
-    let path = Path::new(".gyat");
+    let path = Path::new(gyat::DIRPATH);
     if path.is_dir() {
         return Err(Error::new(
             ErrorKind::Other,
@@ -12,7 +12,7 @@ pub fn main() -> std::io::Result<()> {
     }
 
     fs::create_dir(path)?;
-    fs::create_dir(".gyat/objects")?;
+    fs::create_dir(gyat::DIROBJPATH)?;
 
     let cwd = env::current_dir()?;
     println!(

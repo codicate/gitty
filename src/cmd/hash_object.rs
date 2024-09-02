@@ -1,7 +1,6 @@
 use sha1::{Digest, Sha1};
 use std::fs::File;
 use std::io::{Read, Result, Write};
-use std::path::PathBuf;
 
 pub fn main(path: &str, write: &bool, print: &bool) -> Result<()> {
     let hash = hash_object_file(path, write)?;
@@ -31,7 +30,7 @@ pub fn hash_object(contents: &String, write: &bool) -> Result<String> {
     let hash: String = result.iter().map(|byte| format!("{:02x}", byte)).collect();
 
     if *write {
-        let path = PathBuf::from(".gyat/objects").join(hash.clone());
+        let path = gyat::concat_path(gyat::DIROBJPATH, &hash);
         let mut file = File::create(path).expect("Please run gyat init first");
         file.write_all(contents.as_bytes())?;
         file.flush()?;
