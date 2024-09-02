@@ -33,6 +33,11 @@ enum Commands {
         #[arg(short)]
         print: bool,
     },
+
+    /// Retrieve a stored directory from the object database using tree hash
+    ReadTree {
+        hash: String,
+    },
 }
 
 fn main() {
@@ -46,6 +51,7 @@ fn main() {
         Some(Commands::HashObject { path, write }) => cmd::hash_object::main(path, write, &true),
         Some(Commands::CatFile { hash }) => cmd::cat_file::main(hash),
         Some(Commands::WriteTree { print }) => cmd::write_tree::main(print),
+        Some(Commands::ReadTree { hash }) => cmd::read_tree::main(hash),
         None => Ok(println!("Welcome to gyat. Use -h to see usage.")),
     };
 
