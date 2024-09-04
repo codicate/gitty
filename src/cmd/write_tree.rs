@@ -1,4 +1,5 @@
 use crate::cmd::hash_object;
+// use anyhow::{Context, Result};
 use std::collections::HashSet;
 use std::fs;
 use std::io::Result;
@@ -6,7 +7,7 @@ use std::path::Path;
 
 pub fn main(print: &bool) -> Result<()> {
     let ignored_files = gyat::get_ignored_file_list();
-    let hash = navigate_folders_recursively(".", &ignored_files, print)?;
+    let hash = navigate_folders_recursively(gyat::CWD, &ignored_files, print)?;
     println!("{}", hash);
     Ok(())
 }
@@ -32,9 +33,9 @@ fn navigate_folders_recursively<P: AsRef<Path>>(
         }
 
         let hash = if path.is_dir() {
-            navigate_folders_recursively(&path, ignored_files, print)?
+            navigate_folders_recursively(&path, ignored_files, print).unwrap()
         } else {
-            hash_object::hash_object_file(&path_string, &true)?
+            hash_object::hash_object_file(&path_string, &true).unwrap()
         };
 
         let content_type = if path.is_dir() { "tree" } else { "blob" };
@@ -42,6 +43,6 @@ fn navigate_folders_recursively<P: AsRef<Path>>(
         tree_content.push_str(&format!("{} {} {}\n", content_type, hash, file_name));
     }
 
-    let hash = hash_object::hash_object(&tree_content, &true)?;
+    let hash = hash_object::hash_object(&tree_content, &true).unwrap();
     Ok(hash)
 }

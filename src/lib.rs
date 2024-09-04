@@ -3,6 +3,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader, Result};
 use std::path::PathBuf;
 
+pub const CWD: &str = "./playground/";
 pub const DIRPATH: &str = "playground/.gyat";
 pub const DIROBJPATH: &str = "playground/.gyat/objects";
 pub const IGNOREPATH: &str = "playground/.gyatignore";

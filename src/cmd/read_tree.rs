@@ -12,8 +12,8 @@ pub fn main(hash: &str) -> Result<()> {
     }
 
     let ignored_files = gyat::get_ignored_file_list();
-    delete_cwd(".", &ignored_files)?;
-    restore_cwd(".", hash)?;
+    delete_cwd(gyat::CWD, &ignored_files)?;
+    restore_cwd(gyat::CWD, hash)?;
 
     Ok(())
 }
@@ -34,7 +34,7 @@ fn delete_cwd(dir: &str, ignored_files: &HashSet<String>) -> Result<()> {
         }
     }
 
-    if dir != "." {
+    if dir != gyat::CWD {
         fs::remove_dir(dir)?;
     }
     Ok(())
