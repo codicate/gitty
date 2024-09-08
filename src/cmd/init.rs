@@ -1,23 +1,19 @@
-use std::io::{Error, ErrorKind};
 use std::path::Path;
 use std::{env, fs};
 
-pub fn main() -> std::io::Result<()> {
+pub fn main() -> () {
     let path = Path::new(gyat::DIRPATH);
     if path.is_dir() {
-        return Err(Error::new(
-            ErrorKind::Other,
-            "This repository has already been initialized",
-        ));
+        panic!("This repository has already been initialized");
     }
 
-    fs::create_dir(path)?;
-    fs::create_dir(gyat::DIROBJPATH)?;
+    fs::create_dir(path).unwrap();
+    fs::create_dir(gyat::DIROBJPATH).unwrap();
+    fs::File::create(gyat::HEAD).unwrap();
 
-    let cwd = env::current_dir()?;
+    let cwd = env::current_dir().unwrap();
     println!(
         "Initialized empty gyat repository in {}\\.gyat",
         cwd.display()
     );
-    Ok(())
 }

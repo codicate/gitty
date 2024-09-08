@@ -5,11 +5,15 @@ use std::fs;
 use std::io::Result;
 use std::path::Path;
 
-pub fn main(print: &bool) -> Result<()> {
-    let ignored_files = gyat::get_ignored_file_list();
-    let hash = navigate_folders_recursively(gyat::CWD, &ignored_files, print)?;
+pub fn main(print: &bool) -> () {
+    let hash = write_tree(print);
     println!("{}", hash);
-    Ok(())
+}
+
+pub fn write_tree(print: &bool) -> String {
+    let ignored_files = gyat::get_ignored_file_list();
+    let hash = navigate_folders_recursively(gyat::CWD, &ignored_files, print).unwrap();
+    hash
 }
 
 fn navigate_folders_recursively<P: AsRef<Path>>(
@@ -35,7 +39,7 @@ fn navigate_folders_recursively<P: AsRef<Path>>(
         let hash = if path.is_dir() {
             navigate_folders_recursively(&path, ignored_files, print).unwrap()
         } else {
-            hash_object::hash_object_file(&path_string, &true).unwrap()
+            hash_object::store_file_as_object(&path_string).unwrap()
         };
 
         let content_type = if path.is_dir() { "tree" } else { "blob" };
@@ -43,6 +47,6 @@ fn navigate_folders_recursively<P: AsRef<Path>>(
         tree_content.push_str(&format!("{} {} {}\n", content_type, hash, file_name));
     }
 
-    let hash = hash_object::hash_object(&tree_content, &true).unwrap();
+    let hash = hash_object::store_content_as_object(&tree_content).unwrap();
     Ok(hash)
 }

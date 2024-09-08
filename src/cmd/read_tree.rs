@@ -1,21 +1,18 @@
 use crate::cmd::cat_file;
 use std::collections::HashSet;
 use std::fs;
-use std::io::{Error, ErrorKind, Result, Write};
+use std::io::{Result, Write};
 use std::path::{Path, PathBuf};
 
-use super::cat_file::cat_file;
-pub fn main(hash: &str) -> Result<()> {
+pub fn main(hash: &str) -> () {
     let path = gyat::concat_path(gyat::DIROBJPATH, hash);
     if !Path::new(&path).exists() {
-        return Err(Error::new(ErrorKind::InvalidInput, "Invalid hash provided"));
+        panic!("Invalid hash provided");
     }
 
     let ignored_files = gyat::get_ignored_file_list();
-    delete_cwd(gyat::CWD, &ignored_files)?;
-    restore_cwd(gyat::CWD, hash)?;
-
-    Ok(())
+    delete_cwd(gyat::CWD, &ignored_files).unwrap();
+    restore_cwd(gyat::CWD, hash).unwrap();
 }
 
 fn delete_cwd(dir: &str, ignored_files: &HashSet<String>) -> Result<()> {
@@ -41,7 +38,7 @@ fn delete_cwd(dir: &str, ignored_files: &HashSet<String>) -> Result<()> {
 }
 
 fn restore_cwd(dir: &str, hash: &str) -> Result<()> {
-    let tree_content = cat_file(hash)?;
+    let tree_content = cat_file::get_object_content(hash)?;
     let lines = parse_tree_file(tree_content);
 
     for (filetype, hash, filename) in lines {
@@ -52,7 +49,7 @@ fn restore_cwd(dir: &str, hash: &str) -> Result<()> {
             fs::create_dir(path)?;
             restore_cwd(&path_string, &hash)?;
         } else {
-            let contents = cat_file::cat_file(&hash)?;
+            let contents = cat_file::get_object_content(&hash)?;
             let mut file = fs::File::create(path)?;
             file.write_all(contents.as_bytes())?;
             file.flush()?;

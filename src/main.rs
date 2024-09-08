@@ -38,25 +38,24 @@ enum Commands {
     ReadTree {
         hash: String,
     },
+
+    Commit {
+        #[arg(short, required = true)]
+        message: String,
+    },
 }
 
 fn main() {
     let cli = Cli::parse();
 
-    // You can check for the existence of subcommands, and if found use their
-    // matches just as you would the top level cmd
-    let res = match &cli.command {
+    match &cli.command {
         Some(Commands::Init {}) => cmd::init::main(),
         Some(Commands::Reset {}) => cmd::reset::main(),
-        Some(Commands::HashObject { path, write }) => cmd::hash_object::main(path, write, &true),
+        Some(Commands::HashObject { path, write }) => cmd::hash_object::main(path, write),
         Some(Commands::CatFile { hash }) => cmd::cat_file::main(hash),
         Some(Commands::WriteTree { print }) => cmd::write_tree::main(print),
         Some(Commands::ReadTree { hash }) => cmd::read_tree::main(hash),
-        None => Ok(println!("Welcome to gyat. Use -h to see usage.")),
+        Some(Commands::Commit { message }) => cmd::commit::main(message),
+        None => println!("Welcome to gyat. Use -h to see usage."),
     };
-
-    match res {
-        Ok(_) => {}
-        Err(e) => eprintln!("Unexpected Error: {}", e),
-    }
 }

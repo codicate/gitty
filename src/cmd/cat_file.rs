@@ -1,16 +1,19 @@
 use std::fs::File;
 use std::io::{Read, Result};
 
-pub fn main(hash: &str) -> Result<()> {
-    let contents = cat_file(hash)?;
+pub fn main(hash: &str) -> () {
+    let contents = get_object_content(hash).unwrap();
     println!("{}", contents);
-    Ok(())
 }
 
-pub fn cat_file(hash: &str) -> Result<String> {
-    let path = gyat::concat_path(gyat::DIROBJPATH, hash);
+pub fn get_file_content(path: &str) -> Result<String> {
     let mut file = File::open(path)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-    Ok(contents)
+    let mut content = String::new();
+    file.read_to_string(&mut content)?;
+    Ok(content)
+}
+
+pub fn get_object_content(hash: &str) -> Result<String> {
+    let path = gyat::concat_path(gyat::DIROBJPATH, hash);
+    get_file_content(&path)
 }
