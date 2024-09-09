@@ -8,8 +8,8 @@ pub fn main() -> () {
     }
 
     fs::create_dir(path).unwrap();
-    fs::create_dir(gyat::DIROBJPATH).unwrap();
-    fs::File::create(gyat::HEAD).unwrap();
+    fs::create_dir(gyat::OBJPATH).unwrap();
+    fs::create_dir(gyat::TAGPATH).unwrap();
 
     let cwd = env::current_dir().unwrap();
     println!(

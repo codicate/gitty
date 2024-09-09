@@ -30,12 +30,12 @@ pub fn write_content_to_file<S: AsRef<Path>>(content: &String, path: S) -> Resul
 
 pub fn store_content_as_object(content: &String) -> Result<String> {
     let hash = hash_content(content);
-    let path = gyat::concat_path(gyat::DIROBJPATH, &hash);
+    let path = gyat::concat_path(gyat::OBJPATH, &hash);
     write_content_to_file(content, &path).expect("Please run gyat init first");
     Ok(hash)
 }
 
 pub fn store_file_as_object(path: &str) -> Result<String> {
-    let content = gyat::get_file_content(path).unwrap();
+    let content = gyat::get_file_content_by_path(path).unwrap();
     store_content_as_object(&content)
 }

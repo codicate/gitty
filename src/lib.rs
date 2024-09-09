@@ -5,15 +5,15 @@ use std::path::PathBuf;
 
 pub const CWD: &str = "./playground/";
 pub const DIRPATH: &str = "playground/.gyat";
-pub const DIROBJPATH: &str = "playground/.gyat/objects";
+pub const OBJPATH: &str = "playground/.gyat/objects";
+pub const TAGPATH: &str = "playground/.gyat/tags";
 pub const IGNOREPATH: &str = "playground/.gyatignore";
-pub const HEAD: &str = "playground/.gyat/HEAD";
 
-pub fn concat_path(base_path: &str, folder_name: &str) -> String {
-    if base_path.ends_with('/') {
-        format!("{}{}", base_path, folder_name)
+pub fn concat_path(a: &str, b: &str) -> String {
+    if a.ends_with('/') {
+        format!("{}{}", a, b)
     } else {
-        format!("{}/{}", base_path, folder_name)
+        format!("{}/{}", a, b)
     }
 }
 
@@ -51,14 +51,18 @@ fn read_ignorefile(ignorefile: &str) -> Vec<String> {
     return lines;
 }
 
-pub fn get_file_content(path: &str) -> Result<String> {
+pub fn get_file_content_by_path(path: &str) -> Result<String> {
     let mut file = File::open(path)?;
     let mut content = String::new();
     file.read_to_string(&mut content)?;
     Ok(content)
 }
 
-pub fn get_file_content_by_hash(hash: &str) -> Result<String> {
-    let path = concat_path(DIROBJPATH, hash);
-    get_file_content(&path)
+pub fn get_file_content(path: &str, name: &str) -> Result<String> {
+    let path = concat_path(path, name);
+    get_file_content_by_path(&path)
+}
+
+pub fn get_object_content(hash: &str) -> Result<String> {
+    get_file_content(OBJPATH, hash)
 }

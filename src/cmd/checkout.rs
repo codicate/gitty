@@ -1,4 +1,4 @@
-use super::{hash_object, log::read_commit, read_tree};
+use super::{log::read_commit, read_tree, tag};
 
 pub fn main(branchname: &String, new_branch: &bool, hash: &bool) {
     if *hash {
@@ -14,7 +14,7 @@ pub fn main(branchname: &String, new_branch: &bool, hash: &bool) {
 }
 
 fn switch_to_commit_hash(hash: &String) {
-    write_head(hash);
+    tag::write_head(hash);
     let (tree_hash, _, _) = read_commit(hash);
     read_tree::main(&tree_hash);
 }
@@ -22,15 +22,3 @@ fn switch_to_commit_hash(hash: &String) {
 fn create_new_branch(branchname: &String) {}
 
 fn switch_to_branch(branchname: &String) {}
-
-pub fn read_head() -> String {
-    let content = gyat::get_file_content(gyat::HEAD).unwrap();
-    if content.is_empty() {
-        return "first".to_string();
-    }
-    content
-}
-
-pub fn write_head(hash: &String) -> () {
-    hash_object::write_content_to_file(hash, gyat::HEAD).unwrap();
-}
