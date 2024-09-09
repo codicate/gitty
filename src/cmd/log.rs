@@ -2,7 +2,7 @@ use super::{cat_file::get_object_content, commit::read_head};
 
 pub fn main() {
     let hash = read_head();
-    if hash.is_empty() {
+    if hash == "first" {
         println!("fatal: your current branch 'main' does not have any commits yet");
         return;
     }
@@ -25,7 +25,7 @@ fn print_commit(hash: &String) -> String {
     return parent_hash;
 }
 
-fn read_commit(hash: &String) -> (String, String, String) {
+pub fn read_commit(hash: &String) -> (String, String, String) {
     let content = get_object_content(hash).unwrap();
     let tree_hash = get_hash_from_line(&content, 0);
     let parent_hash = get_hash_from_line(&content, 1);

@@ -19,8 +19,8 @@ enum Commands {
     HashObject {
         path: String,
 
-        #[arg(short)]
-        write: bool,
+        #[arg(short, long)]
+        print: bool,
     },
 
     /// Provide contents or details of repository objects
@@ -47,6 +47,18 @@ enum Commands {
 
     // Show commit logs
     Log {},
+
+    /// Switch branches or restore working tree files
+    Checkout {
+        #[arg(default_value = "HEAD")]
+        branchname: String,
+
+        #[arg(short, help = "Create a new branch named <BRANCHNAME>")]
+        branch: bool,
+
+        #[arg(long, help = "Switch to a specific commit hash")]
+        hash: bool,
+    },
 }
 
 fn main() {
@@ -55,12 +67,17 @@ fn main() {
     match &cli.command {
         Some(Commands::Init {}) => cmd::init::main(),
         Some(Commands::Reset {}) => cmd::reset::main(),
-        Some(Commands::HashObject { path, write }) => cmd::hash_object::main(path, write),
+        Some(Commands::HashObject { path, print }) => cmd::hash_object::main(path, print),
         Some(Commands::CatFile { hash }) => cmd::cat_file::main(hash),
         Some(Commands::WriteTree { print }) => cmd::write_tree::main(print),
         Some(Commands::ReadTree { hash }) => cmd::read_tree::main(hash),
         Some(Commands::Commit { message }) => cmd::commit::main(message),
         Some(Commands::Log {}) => cmd::log::main(),
+        Some(Commands::Checkout {
+            branchname,
+            branch,
+            hash,
+        }) => cmd::checkout::main(branchname, branch, hash),
         None => println!("Welcome to gyat. Use -h to see usage."),
     };
 }
