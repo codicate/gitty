@@ -59,6 +59,12 @@ enum Commands {
         #[arg(long, help = "Switch to a specific commit hash")]
         hash: bool,
     },
+
+    /// Tag a commit with a named reference
+    Tag {
+        name: String,
+        hash: String,
+    },
 }
 
 fn main() {
@@ -78,6 +84,7 @@ fn main() {
             branch,
             hash,
         }) => cmd::checkout::main(branchname, branch, hash),
+        Some(Commands::Tag { name, hash }) => cmd::tag::main(name, hash),
         None => println!("Welcome to gyat. Use -h to see usage."),
     };
 }

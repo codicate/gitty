@@ -6,4 +6,5 @@ pub mod init;
 pub mod log;
 pub mod read_tree;
 pub mod reset;
+pub mod tag;
 pub mod write_tree;

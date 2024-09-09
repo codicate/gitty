@@ -1,4 +1,4 @@
-use super::{cat_file::get_object_content, commit::read_head};
+use super::{cat_file::get_object_content, checkout::read_head};
 
 pub fn main() {
     let hash = read_head();
