@@ -39,10 +39,14 @@ enum Commands {
         hash: String,
     },
 
+    /// Record changes to the repository
     Commit {
         #[arg(short, required = true)]
         message: String,
     },
+
+    // Show commit logs
+    Log {},
 }
 
 fn main() {
@@ -56,6 +60,7 @@ fn main() {
         Some(Commands::WriteTree { print }) => cmd::write_tree::main(print),
         Some(Commands::ReadTree { hash }) => cmd::read_tree::main(hash),
         Some(Commands::Commit { message }) => cmd::commit::main(message),
+        Some(Commands::Log {}) => cmd::log::main(),
         None => println!("Welcome to gyat. Use -h to see usage."),
     };
 }
