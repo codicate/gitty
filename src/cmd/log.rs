@@ -10,17 +10,22 @@ pub fn main() {
 }
 
 fn traverse_commit_tree(hash: &String) -> () {
-    println!("commit {}", hash);
-    let (_, parent_hash, message) = read_commit(hash);
-    println!("message: {}\n", message);
-
+    let parent_hash = print_commit(hash);
     if parent_hash == "first" {
         return;
     }
+    println!();
     traverse_commit_tree(&parent_hash);
 }
 
-pub fn read_commit(hash: &String) -> (String, String, String) {
+fn print_commit(hash: &String) -> String {
+    let (_, parent_hash, message) = read_commit(hash);
+    println!("commit {}", hash);
+    println!("message: {}", message);
+    return parent_hash;
+}
+
+fn read_commit(hash: &String) -> (String, String, String) {
     let content = get_object_content(hash).unwrap();
     let tree_hash = get_hash_from_line(&content, 0);
     let parent_hash = get_hash_from_line(&content, 1);
