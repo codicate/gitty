@@ -60,6 +60,9 @@ enum Commands {
 
         #[arg(short, help = "Create a new branch named <BRANCHNAME>")]
         branch: bool,
+
+        #[arg(short, help = "Detach HEAD at <commit>, maintain the current branch")]
+        detached: bool,
     },
 
     /// Tag a commit with a named reference
@@ -82,7 +85,11 @@ fn main() {
         Some(Commands::ReadTree { hash }) => cmd::read_tree::main(hash),
         Some(Commands::Commit { message }) => cmd::commit::main(message),
         Some(Commands::Log { refname, graph }) => cmd::log::main(refname, graph),
-        Some(Commands::Checkout { name, branch }) => cmd::checkout::main(name, branch),
+        Some(Commands::Checkout {
+            name,
+            branch,
+            detached,
+        }) => cmd::checkout::main(name, branch, detached),
         Some(Commands::Tag { tagname, refname }) => cmd::tag::main(tagname, refname),
         None => println!("Welcome to gyat. Use -h to see usage."),
     };

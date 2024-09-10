@@ -1,7 +1,15 @@
-use super::tag::get_oid;
+use super::tag;
 
 pub fn main(refname: &str, _graph: &bool) -> () {
-    let hash = get_oid(refname);
+    let hash = match refname {
+        "HEAD" => {
+            let refname = tag::get_head().unwrap_or_default();
+            println!("On branch {}", refname);
+            tag::get_head_commit()
+        }
+        _ => tag::get_oid(refname),
+    };
+
     match hash {
         Ok(hash) => traverse_commit_tree(&hash),
         Err(_) => println!("fatal: your current branch does not have any commits yet"),

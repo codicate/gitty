@@ -9,6 +9,7 @@ pub fn main() -> () {
 
     fs::create_dir_all(gyat::OBJPATH).unwrap();
     fs::create_dir_all(gyat::TAGPATH).unwrap();
+    fs::create_dir_all(gyat::HEADPATH).unwrap();
 
     let cwd = env::current_dir().unwrap();
     println!(

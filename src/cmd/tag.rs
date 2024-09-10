@@ -24,8 +24,14 @@ pub fn get_head() -> Result<String> {
     get_ref("HEAD")
 }
 
-pub fn write_head(hash: &String) -> () {
-    write_ref("HEAD", hash, gyat::TAGPATH);
+pub fn get_head_commit() -> Result<String> {
+    let refname = get_head()?;
+    let hash = get_ref(&refname)?;
+    Ok(hash)
+}
+
+pub fn write_head(refname: &String) -> () {
+    write_ref("HEAD", refname, gyat::HEADPATH);
 }
 
 pub fn get_oid(name: &str) -> Result<String> {
