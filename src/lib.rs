@@ -6,7 +6,8 @@ use std::path::PathBuf;
 pub const CWD: &str = "./playground/";
 pub const DIRPATH: &str = "playground/.gyat";
 pub const OBJPATH: &str = "playground/.gyat/objects";
-pub const TAGPATH: &str = "playground/.gyat/tags";
+pub const TAGPATH: &str = "playground/.gyat/refs/tags";
+pub const HEADPATH: &str = "playground/.gyat/refs/heads";
 pub const IGNOREPATH: &str = "playground/.gyatignore";
 
 pub fn concat_path(a: &str, b: &str) -> String {

@@ -7,9 +7,11 @@ pub fn main(message: &String) -> () {
     let mut content = String::new();
 
     content.push_str(&format!("tree {}\n", hash));
-    content.push_str(&format!("parent {}\n", tag::read_head()));
+    let parent = tag::get_head().unwrap_or_default();
+    content.push_str(&format!("parent {}\n", parent));
     content.push_str(message);
 
     let hash = hash_object::store_content_as_object(&content).unwrap();
+    println!("commit: {}", hash);
     tag::write_head(&hash);
 }

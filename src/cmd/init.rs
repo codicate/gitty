@@ -7,9 +7,8 @@ pub fn main() -> () {
         panic!("This repository has already been initialized");
     }
 
-    fs::create_dir(path).unwrap();
-    fs::create_dir(gyat::OBJPATH).unwrap();
-    fs::create_dir(gyat::TAGPATH).unwrap();
+    fs::create_dir_all(gyat::OBJPATH).unwrap();
+    fs::create_dir_all(gyat::TAGPATH).unwrap();
 
     let cwd = env::current_dir().unwrap();
     println!(

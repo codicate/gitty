@@ -1,21 +1,18 @@
-use super::tag::read_head;
+use super::tag::get_head;
 
-pub fn main() {
-    let hash = read_head();
-    if hash == "first" {
-        println!("fatal: your current branch 'main' does not have any commits yet");
-        return;
+pub fn main() -> () {
+    match get_head() {
+        Ok(hash) => traverse_commit_tree(&hash),
+        Err(_) => println!("fatal: your current branch does not have any commits yet"),
     }
-    traverse_commit_tree(&hash);
 }
 
 fn traverse_commit_tree(hash: &String) -> () {
     let parent_hash = print_commit(hash);
-    if parent_hash == "first" {
-        return;
+    if !parent_hash.is_empty() {
+        println!();
+        traverse_commit_tree(&parent_hash);
     }
-    println!();
-    traverse_commit_tree(&parent_hash);
 }
 
 fn print_commit(hash: &String) -> String {
@@ -40,6 +37,6 @@ fn get_hash_from_line(content: &String, n: usize) -> String {
         .unwrap()
         .split_whitespace()
         .nth(1)
-        .unwrap()
+        .unwrap_or_default()
         .to_string()
 }

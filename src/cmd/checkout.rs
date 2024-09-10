@@ -1,24 +1,26 @@
 use super::{log::read_commit, read_tree, tag};
 
-pub fn main(branchname: &String, new_branch: &bool, hash: &bool) {
-    if *hash {
-        println!("Switching to commit hash: {}", branchname);
-        switch_to_commit_hash(branchname);
-    } else if *new_branch {
-        println!("Creating a new branch: {}", branchname);
-        create_new_branch(branchname);
+pub fn main(name: &String, new_branch: &bool) {
+    if *new_branch {
+        create_new_branch(name);
     } else {
-        println!("Switching to branch: {}", branchname);
-        switch_to_branch(branchname);
+        move_head(name);
     }
 }
 
-fn switch_to_commit_hash(hash: &String) {
-    tag::write_head(hash);
-    let (tree_hash, _, _) = read_commit(hash);
-    read_tree::main(&tree_hash);
+fn move_head(name: &String) -> () {
+    let hash = tag::get_oid(name);
+    match hash {
+        Ok(hash) => {
+            tag::write_head(&hash);
+            let (tree_hash, _, _) = read_commit(&hash);
+            read_tree::main(&tree_hash);
+            println!("Moved HEAD to: {}", name);
+        }
+        Err(_) => println!("fatal: reference '{}' cannot be found", name),
+    }
 }
 
-fn create_new_branch(branchname: &String) {}
-
-fn switch_to_branch(branchname: &String) {}
+fn create_new_branch(name: &String) {
+    println!("Creating a new branch: {}", name);
+}

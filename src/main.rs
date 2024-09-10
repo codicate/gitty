@@ -50,14 +50,10 @@ enum Commands {
 
     /// Switch branches or restore working tree files
     Checkout {
-        #[arg(default_value = "HEAD")]
-        branchname: String,
+        name: String,
 
         #[arg(short, help = "Create a new branch named <BRANCHNAME>")]
         branch: bool,
-
-        #[arg(long, help = "Switch to a specific commit hash")]
-        hash: bool,
     },
 
     /// Tag a commit with a named reference
@@ -79,11 +75,7 @@ fn main() {
         Some(Commands::ReadTree { hash }) => cmd::read_tree::main(hash),
         Some(Commands::Commit { message }) => cmd::commit::main(message),
         Some(Commands::Log {}) => cmd::log::main(),
-        Some(Commands::Checkout {
-            branchname,
-            branch,
-            hash,
-        }) => cmd::checkout::main(branchname, branch, hash),
+        Some(Commands::Checkout { name, branch }) => cmd::checkout::main(name, branch),
         Some(Commands::Tag { name, hash }) => cmd::tag::main(name, hash),
         None => println!("Welcome to gyat. Use -h to see usage."),
     };
