@@ -74,6 +74,9 @@ enum Commands {
 
     /// List all current active branches
     Branch {},
+
+    /// Show the working tree status
+    Status {},
 }
 
 fn main() {
@@ -95,6 +98,7 @@ fn main() {
         }) => cmd::checkout::main(name, branch, detached),
         Some(Commands::Tag { tagname, refname }) => cmd::tag::main(tagname, refname),
         Some(Commands::Branch {}) => cmd::branch::main(),
+        Some(Commands::Status {}) => cmd::status::main(),
         None => println!("Welcome to gyat. Use -h to see usage."),
     };
 }
