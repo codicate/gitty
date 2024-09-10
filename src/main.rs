@@ -46,7 +46,10 @@ enum Commands {
     },
 
     // Show commit logs
-    Log {},
+    Log {
+        #[arg(default_value = "HEAD")]
+        refname: String,
+    },
 
     /// Switch branches or restore working tree files
     Checkout {
@@ -58,8 +61,9 @@ enum Commands {
 
     /// Tag a commit with a named reference
     Tag {
-        name: String,
-        hash: String,
+        tagname: String,
+        #[arg(default_value = "HEAD")]
+        refname: String,
     },
 }
 
@@ -74,9 +78,9 @@ fn main() {
         Some(Commands::WriteTree { print }) => cmd::write_tree::main(print),
         Some(Commands::ReadTree { hash }) => cmd::read_tree::main(hash),
         Some(Commands::Commit { message }) => cmd::commit::main(message),
-        Some(Commands::Log {}) => cmd::log::main(),
+        Some(Commands::Log { refname }) => cmd::log::main(refname),
         Some(Commands::Checkout { name, branch }) => cmd::checkout::main(name, branch),
-        Some(Commands::Tag { name, hash }) => cmd::tag::main(name, hash),
+        Some(Commands::Tag { tagname, refname }) => cmd::tag::main(tagname, refname),
         None => println!("Welcome to gyat. Use -h to see usage."),
     };
 }

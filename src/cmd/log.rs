@@ -1,7 +1,8 @@
-use super::tag::get_head;
+use super::tag::get_oid;
 
-pub fn main() -> () {
-    match get_head() {
+pub fn main(refname: &str) -> () {
+    let hash = get_oid(refname);
+    match hash {
         Ok(hash) => traverse_commit_tree(&hash),
         Err(_) => println!("fatal: your current branch does not have any commits yet"),
     }
