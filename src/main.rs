@@ -49,6 +49,9 @@ enum Commands {
     Log {
         #[arg(default_value = "HEAD")]
         refname: String,
+
+        #[arg(short, help = "Show the graph of the commit history")]
+        graph: bool,
     },
 
     /// Switch branches or restore working tree files
@@ -78,7 +81,7 @@ fn main() {
         Some(Commands::WriteTree { print }) => cmd::write_tree::main(print),
         Some(Commands::ReadTree { hash }) => cmd::read_tree::main(hash),
         Some(Commands::Commit { message }) => cmd::commit::main(message),
-        Some(Commands::Log { refname }) => cmd::log::main(refname),
+        Some(Commands::Log { refname, graph }) => cmd::log::main(refname, graph),
         Some(Commands::Checkout { name, branch }) => cmd::checkout::main(name, branch),
         Some(Commands::Tag { tagname, refname }) => cmd::tag::main(tagname, refname),
         None => println!("Welcome to gyat. Use -h to see usage."),

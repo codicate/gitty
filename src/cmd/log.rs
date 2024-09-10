@@ -1,6 +1,6 @@
 use super::tag::get_oid;
 
-pub fn main(refname: &str) -> () {
+pub fn main(refname: &str, _graph: &bool) -> () {
     let hash = get_oid(refname);
     match hash {
         Ok(hash) => traverse_commit_tree(&hash),
