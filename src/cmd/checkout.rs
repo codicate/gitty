@@ -17,7 +17,7 @@ fn move_head(name: &String, detached: &bool) -> () {
 
     if !*detached {
         tag::write_head(name);
-        println!("HEAD is now at: {}", hash);
+        println!("Switched to branch '{}'", name);
     } else {
         println!("You are in 'detached HEAD' state. You can look around, make experimental changes and commit them, and you can discard any commits you make in this state without impacting any branches by switching back to a branch.");
     }
@@ -34,7 +34,7 @@ fn create_new_branch(name: &String) {
         Ok(hash) => {
             tag::write_ref(name, &hash, gyat::HEADPATH);
             tag::write_head(name);
-            println!("Creating a new branch: {}", name);
+            println!("Created and switched to a new branch: {}", name);
         }
         Err(_) => println!("fatal: your current branch does not have any commits yet"),
     }

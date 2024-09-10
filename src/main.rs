@@ -71,6 +71,9 @@ enum Commands {
         #[arg(default_value = "HEAD")]
         refname: String,
     },
+
+    /// List all current active branches
+    Branch {},
 }
 
 fn main() {
@@ -91,6 +94,7 @@ fn main() {
             detached,
         }) => cmd::checkout::main(name, branch, detached),
         Some(Commands::Tag { tagname, refname }) => cmd::tag::main(tagname, refname),
+        Some(Commands::Branch {}) => cmd::branch::main(),
         None => println!("Welcome to gyat. Use -h to see usage."),
     };
 }
