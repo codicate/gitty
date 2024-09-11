@@ -13,7 +13,7 @@ enum Commands {
     /// Create an empty Git repository or reinitialize an existing one
     Init {},
     // DEBUG
-    Reset {},
+    ResetDir {},
 
     /// Compute object ID and optionally create an object from a file
     HashObject {
@@ -60,9 +60,6 @@ enum Commands {
 
         #[arg(short, help = "Create a new branch named <BRANCHNAME>")]
         branch: bool,
-
-        #[arg(short, help = "Detach HEAD at <commit>, maintain the current branch")]
-        detached: bool,
     },
 
     /// Tag a commit with a named reference
@@ -77,6 +74,11 @@ enum Commands {
 
     /// Show the working tree status
     Status {},
+
+    /// Reset current HEAD to the specified state
+    Reset {
+        hash: String,
+    },
 }
 
 fn main() {
@@ -84,21 +86,18 @@ fn main() {
 
     match &cli.command {
         Some(Commands::Init {}) => cmd::init::main(),
-        Some(Commands::Reset {}) => cmd::reset::main(),
+        Some(Commands::ResetDir {}) => cmd::reset_dir::main(),
         Some(Commands::HashObject { path, print }) => cmd::hash_object::main(path, print),
         Some(Commands::CatFile { hash }) => cmd::cat_file::main(hash),
         Some(Commands::WriteTree { print }) => cmd::write_tree::main(print),
         Some(Commands::ReadTree { hash }) => cmd::read_tree::main(hash),
         Some(Commands::Commit { message }) => cmd::commit::main(message),
         Some(Commands::Log { refname, graph }) => cmd::log::main(refname, graph),
-        Some(Commands::Checkout {
-            name,
-            branch,
-            detached,
-        }) => cmd::checkout::main(name, branch, detached),
+        Some(Commands::Checkout { name, branch }) => cmd::checkout::main(name, branch),
         Some(Commands::Tag { tagname, refname }) => cmd::tag::main(tagname, refname),
         Some(Commands::Branch {}) => cmd::branch::main(),
         Some(Commands::Status {}) => cmd::status::main(),
+        Some(Commands::Reset { hash }) => cmd::reset::main(hash),
         None => println!("Welcome to gyat. Use -h to see usage."),
     };
 }

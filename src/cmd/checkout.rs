@@ -2,25 +2,21 @@ use crate::cmd::tag;
 
 use super::{log::read_commit, read_tree};
 
-pub fn main(name: &String, new_branch: &bool, detached: &bool) -> () {
+pub fn main(name: &String, new_branch: &bool) -> () {
     if *new_branch {
         create_new_branch(name);
     } else {
-        move_head(name, detached);
+        move_head(name);
     }
 }
 
-fn move_head(name: &String, detached: &bool) -> () {
+fn move_head(name: &String) -> () {
     let hash = tag::get_oid(name).expect(&format!("fatal: reference '{}' cannot be found", name));
     let (tree_hash, _, _) = read_commit(&hash);
-    read_tree::main(&tree_hash);
 
-    if !*detached {
-        tag::write_head(name);
-        println!("Switched to branch '{}'", name);
-    } else {
-        println!("You are in 'detached HEAD' state. You can look around, make experimental changes and commit them, and you can discard any commits you make in this state without impacting any branches by switching back to a branch.");
-    }
+    read_tree::main(&tree_hash);
+    tag::write_head(name);
+    println!("Switched to branch '{}'", name);
 }
 
 pub fn create_main_branch(hash: &String) {
