@@ -24,7 +24,7 @@ fn traverse_commit_tree(hash: &String) -> () {
     }
 }
 
-fn print_commit(hash: &String) -> String {
+pub fn print_commit(hash: &String) -> String {
     let (_, parent_hash, message) = read_commit(hash);
     println!("commit {}", hash);
     println!("message: {}", message);

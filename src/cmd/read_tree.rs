@@ -58,7 +58,7 @@ fn restore_cwd(dir: &str, hash: &str) -> Result<()> {
     Ok(())
 }
 
-fn parse_tree_file(input: String) -> Vec<(String, String, String)> {
+pub fn parse_tree_file(input: String) -> Vec<(String, String, String)> {
     input
         .lines()
         .map(|s| {

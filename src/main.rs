@@ -79,6 +79,11 @@ enum Commands {
     Reset {
         hash: String,
     },
+
+    /// Show diffs of a specific commit
+    Show {
+        hash: String,
+    },
 }
 
 fn main() {
@@ -98,6 +103,7 @@ fn main() {
         Some(Commands::Branch {}) => cmd::branch::main(),
         Some(Commands::Status {}) => cmd::status::main(),
         Some(Commands::Reset { hash }) => cmd::reset::main(hash),
+        Some(Commands::Show { hash }) => cmd::show::main(hash),
         None => println!("Welcome to gyat. Use -h to see usage."),
     };
 }

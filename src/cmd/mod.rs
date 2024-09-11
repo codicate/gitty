@@ -8,6 +8,7 @@ pub mod log;
 pub mod read_tree;
 pub mod reset;
 pub mod reset_dir;
+pub mod show;
 pub mod status;
 pub mod tag;
 pub mod write_tree;
