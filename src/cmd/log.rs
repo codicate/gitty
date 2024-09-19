@@ -32,7 +32,7 @@ pub fn print_commit(hash: &String) -> String {
 }
 
 pub fn read_commit(hash: &String) -> (String, String, String) {
-    let content = gyat::get_object_content(hash).unwrap();
+    let content = gitty::get_object_content(hash).unwrap();
     let tree_hash = get_hash_from_line(&content, 0);
     let parent_hash = get_hash_from_line(&content, 1);
     let message = content.lines().nth(2).unwrap().to_string();

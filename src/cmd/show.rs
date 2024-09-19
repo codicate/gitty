@@ -1,6 +1,6 @@
 use crate::cmd::read_tree;
 use colored::Colorize;
-use gyat::get_object_content;
+use gitty::get_object_content;
 use std::process::Command;
 use std::{collections::HashMap, path::PathBuf};
 
@@ -18,8 +18,8 @@ pub fn main(hash: &String) -> () {
 fn compare_tree(cur_tree_hash: &String, parent_tree_hash: &String) -> () {
     let mut cur_file_list: HashMap<String, String> = HashMap::new();
     let mut parent_file_list: HashMap<String, String> = HashMap::new();
-    get_file_list(gyat::CWD, cur_tree_hash, &mut cur_file_list);
-    get_file_list(gyat::CWD, parent_tree_hash, &mut parent_file_list);
+    get_file_list(gitty::CWD, cur_tree_hash, &mut cur_file_list);
+    get_file_list(gitty::CWD, parent_tree_hash, &mut parent_file_list);
 
     let mut deleted_files: Vec<&String> = Vec::new();
     let mut modified_files: Vec<(&String, &String, &String)> = Vec::new();
@@ -70,7 +70,7 @@ fn compare_tree(cur_tree_hash: &String, parent_tree_hash: &String) -> () {
 }
 
 fn get_file_list(dir: &str, tree_hash: &String, file_list: &mut HashMap<String, String>) -> () {
-    let tree_content = gyat::get_object_content(tree_hash).unwrap();
+    let tree_content = gitty::get_object_content(tree_hash).unwrap();
     let lines = read_tree::parse_tree_file(tree_content);
 
     for (filetype, hash, filename) in lines {
@@ -89,8 +89,8 @@ fn get_file_list(dir: &str, tree_hash: &String, file_list: &mut HashMap<String, 
 }
 
 fn print_file_diffs(hash1: &String, hash2: &String) {
-    let path1 = gyat::concat_path(gyat::OBJPATH, hash1);
-    let path2 = gyat::concat_path(gyat::OBJPATH, hash2);
+    let path1 = gitty::concat_path(gitty::OBJPATH, hash1);
+    let path2 = gitty::concat_path(gitty::OBJPATH, hash2);
 
     let output = Command::new("diff")
         .arg("-u")

@@ -15,7 +15,7 @@ pub fn main() {
 }
 
 fn get_branches() -> Result<Vec<String>> {
-    let branches = fs::read_dir(gyat::HEADPATH)?;
+    let branches = fs::read_dir(gitty::HEADPATH)?;
     let mut branch_list = Vec::new();
 
     for branch in branches {

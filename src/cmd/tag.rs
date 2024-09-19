@@ -3,20 +3,20 @@ use std::{fs, io::Result};
 
 pub fn main(tagname: &String, refname: &String) {
     let hash = get_oid(refname).unwrap();
-    write_ref(tagname, &hash, gyat::TAGPATH);
+    write_ref(tagname, &hash, gitty::TAGPATH);
     println!("Tagging commit {} with name {}", hash, tagname);
 }
 
 pub fn get_ref(name: &str) -> Result<String> {
-    let hash = gyat::get_file_content(gyat::HEADPATH, name);
+    let hash = gitty::get_file_content(gitty::HEADPATH, name);
     if hash.is_ok() {
         return Ok(hash.unwrap());
     }
-    gyat::get_file_content(gyat::TAGPATH, name)
+    gitty::get_file_content(gitty::TAGPATH, name)
 }
 
 pub fn write_ref(name: &str, hash: &String, path: &str) -> () {
-    let path = gyat::concat_path(path, name);
+    let path = gitty::concat_path(path, name);
     hash_object::write_content_to_file(hash, path).unwrap();
 }
 
@@ -31,12 +31,12 @@ pub fn get_head_commit() -> Result<String> {
 }
 
 pub fn write_head(refname: &String) -> () {
-    write_ref("HEAD", refname, gyat::HEADPATH);
+    write_ref("HEAD", refname, gitty::HEADPATH);
 }
 
 pub fn get_oid(name: &str) -> Result<String> {
     let oid = get_ref(name).unwrap_or(name.to_string());
-    let path = gyat::concat_path(gyat::OBJPATH, &oid);
+    let path = gitty::concat_path(gitty::OBJPATH, &oid);
     if fs::metadata(path).is_ok() {
         Ok(oid)
     } else {

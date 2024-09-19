@@ -104,6 +104,6 @@ fn main() {
         Some(Commands::Status {}) => cmd::status::main(),
         Some(Commands::Reset { hash }) => cmd::reset::main(hash),
         Some(Commands::Show { hash }) => cmd::show::main(hash),
-        None => println!("Welcome to gyat. Use -h to see usage."),
+        None => println!("Welcome to gitty. Use -h to see usage."),
     };
 }

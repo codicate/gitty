@@ -11,8 +11,8 @@ pub fn main(print: &bool) -> () {
 }
 
 pub fn write_tree(print: &bool) -> String {
-    let ignored_files = gyat::get_ignored_file_list();
-    let hash = navigate_folders_recursively(gyat::CWD, &ignored_files, print).unwrap();
+    let ignored_files = gitty::get_ignored_file_list();
+    let hash = navigate_folders_recursively(gitty::CWD, &ignored_files, print).unwrap();
     hash
 }
 
@@ -26,7 +26,7 @@ fn navigate_folders_recursively<P: AsRef<Path>>(
 
     for child in children {
         let path = child?.path();
-        let path_string = gyat::strip_path(&path);
+        let path_string = gitty::strip_path(&path);
 
         if ignored_files.contains(&path_string) {
             continue;

@@ -3,12 +3,12 @@ use std::fs::File;
 use std::io::{BufRead, BufReader, Read, Result};
 use std::path::PathBuf;
 
-pub const CWD: &str = "./playground/";
-pub const DIRPATH: &str = "playground/.gyat";
-pub const OBJPATH: &str = "playground/.gyat/objects";
-pub const TAGPATH: &str = "playground/.gyat/refs/tags";
-pub const HEADPATH: &str = "playground/.gyat/refs/heads";
-pub const IGNOREPATH: &str = "playground/.gyatignore";
+pub const CWD: &str = "./";
+pub const DIRPATH: &str = "./.gitty";
+pub const OBJPATH: &str = "./.gitty/objects";
+pub const TAGPATH: &str = "./.gitty/refs/tags";
+pub const HEADPATH: &str = "./.gitty/refs/heads";
+pub const IGNOREPATH: &str = "./.gittyignore";
 
 pub fn concat_path(a: &str, b: &str) -> String {
     if a.ends_with('/') {
@@ -25,7 +25,7 @@ pub fn strip_path(path: &PathBuf) -> String {
 }
 
 pub fn get_ignored_file_list() -> HashSet<String> {
-    let default_ignored_files: Vec<String> = [".gyat", ".git"].map(str::to_string).to_vec();
+    let default_ignored_files: Vec<String> = [".gitty", ".git"].map(str::to_string).to_vec();
 
     let mut lines = read_ignorefile(IGNOREPATH);
     lines.extend(default_ignored_files);
@@ -36,7 +36,7 @@ fn read_ignorefile(ignorefile: &str) -> Vec<String> {
     let file = match File::open(ignorefile) {
         Ok(file) => file,
         Err(_) => {
-            println!("It is recommended to create a .gyatignore file in the root directory");
+            println!("It is recommended to create a .gittyignore file in the root directory");
             return Vec::new();
         }
     };
