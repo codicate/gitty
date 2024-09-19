@@ -12,8 +12,6 @@ struct Cli {
 enum Commands {
     /// Create an empty Git repository or reinitialize an existing one
     Init {},
-    // DEBUG
-    ResetDir {},
 
     /// Compute object ID and optionally create an object from a file
     HashObject {
@@ -24,9 +22,7 @@ enum Commands {
     },
 
     /// Provide contents or details of repository objects
-    CatFile {
-        hash: String,
-    },
+    CatFile { hash: String },
 
     /// Store the current working directory to the object database
     WriteTree {
@@ -35,9 +31,7 @@ enum Commands {
     },
 
     /// Retrieve a stored directory from the object database using tree hash
-    ReadTree {
-        hash: String,
-    },
+    ReadTree { hash: String },
 
     /// Record changes to the repository
     Commit {
@@ -45,7 +39,7 @@ enum Commands {
         message: String,
     },
 
-    // Show commit logs
+    /// Show commit history
     Log {
         #[arg(default_value = "HEAD")]
         refname: String,
@@ -76,14 +70,10 @@ enum Commands {
     Status {},
 
     /// Reset current HEAD to the specified state
-    Reset {
-        hash: String,
-    },
+    Reset { hash: String },
 
     /// Show diffs of a specific commit
-    Show {
-        hash: String,
-    },
+    Show { hash: String },
 }
 
 fn main() {
@@ -91,7 +81,6 @@ fn main() {
 
     match &cli.command {
         Some(Commands::Init {}) => cmd::init::main(),
-        Some(Commands::ResetDir {}) => cmd::reset_dir::main(),
         Some(Commands::HashObject { path, print }) => cmd::hash_object::main(path, print),
         Some(Commands::CatFile { hash }) => cmd::cat_file::main(hash),
         Some(Commands::WriteTree { print }) => cmd::write_tree::main(print),

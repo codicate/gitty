@@ -1,6 +1,5 @@
 use crate::cmd::read_tree;
 use colored::Colorize;
-use gitty::get_object_content;
 use std::process::Command;
 use std::{collections::HashMap, path::PathBuf};
 
