@@ -1,5 +1,7 @@
 use crate::cmd::read_tree;
 use colored::Colorize;
+use gyat::get_object_content;
+use std::process::Command;
 use std::{collections::HashMap, path::PathBuf};
 
 use super::log;
@@ -19,23 +21,24 @@ fn compare_tree(cur_tree_hash: &String, parent_tree_hash: &String) -> () {
     get_file_list(gyat::CWD, cur_tree_hash, &mut cur_file_list);
     get_file_list(gyat::CWD, parent_tree_hash, &mut parent_file_list);
 
-    let mut deleted_files: Vec<String> = Vec::new();
-    let mut modified_files: Vec<String> = Vec::new();
-    let mut new_files: Vec<String> = Vec::new();
+    let mut deleted_files: Vec<&String> = Vec::new();
+    let mut modified_files: Vec<(&String, &String, &String)> = Vec::new();
+    let mut new_files: Vec<&String> = Vec::new();
 
-    for (path, hash) in &cur_file_list {
+    for (path, cur_hash) in &cur_file_list {
         if parent_file_list.contains_key(path) {
-            if parent_file_list.get(path).unwrap() != hash {
-                modified_files.push(path.clone());
+            let parent_hash = parent_file_list.get(path).unwrap();
+            if parent_hash != cur_hash {
+                modified_files.push((path, parent_hash, cur_hash));
             }
         } else {
-            new_files.push(path.clone());
+            new_files.push(path);
         }
     }
 
     for (path, _) in &parent_file_list {
         if !cur_file_list.contains_key(path) {
-            deleted_files.push(path.clone());
+            deleted_files.push(path);
         }
     }
 
@@ -58,12 +61,11 @@ fn compare_tree(cur_tree_hash: &String, parent_tree_hash: &String) -> () {
     }
 
     if !modified_files.is_empty() {
-        println!("Modified files:");
-        for file in modified_files {
-            let line = format!("- {}", file).yellow();
+        for (file, hash1, hash2) in modified_files {
+            let line = format!("> {}", file).yellow();
             println!("{}", line);
+            print_file_diffs(hash1, hash2);
         }
-        println!();
     }
 }
 
@@ -84,4 +86,19 @@ fn get_file_list(dir: &str, tree_hash: &String, file_list: &mut HashMap<String, 
             file_list.insert(path, hash);
         }
     }
+}
+
+fn print_file_diffs(hash1: &String, hash2: &String) {
+    let path1 = gyat::concat_path(gyat::OBJPATH, hash1);
+    let path2 = gyat::concat_path(gyat::OBJPATH, hash2);
+
+    let output = Command::new("diff")
+        .arg("-u")
+        .arg(path1)
+        .arg(path2)
+        .output()
+        .expect("failed to execute diff command");
+
+    let diff = String::from_utf8(output.stdout).unwrap();
+    println!("{}", diff);
 }
